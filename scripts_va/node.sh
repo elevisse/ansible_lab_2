@@ -8,4 +8,5 @@ vagrant
 vagrant
 EOF
 sed -i "s#PasswordAuthentication no#PasswordAuthentication yes#g" /etc/ssh/sshd_config
+echo "ansible     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 service sshd restart

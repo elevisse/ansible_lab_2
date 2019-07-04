@@ -12,12 +12,12 @@
     become: yes
     become_method: sudo
   - name: copy success index
-    template:
+    copy:
       src: /tmp/ansible/index.html
       dest: /var/www/index.html
+      owner: httpd
+      group: httpd
     become: yes
-    become_user: httpd
-    become_method: sudo
     notify:
     - restart apache
   - name: write the apache config file
