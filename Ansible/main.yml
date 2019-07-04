@@ -1,0 +1,44 @@
+---
+- hosts: node1
+  vars:
+    http_port: 80
+    max_requests: 200
+  remote_user: ansible
+  tasks:
+  - name: ensure apache is at the latest version
+    yum:
+      name: httpd
+      state: latest
+    become: yes
+    become_method: sudo
+  - name: copy success index
+    template:
+      src: /tmp/ansible/index.html
+      dest: /var/www/index.html
+    become: yes
+    become_user: httpd
+    become_method: sudo
+    notify:
+    - restart apache
+  - name: write the apache config file
+    template:
+      src: /tmp/ansible/httpd.conf.j2
+      dest: /etc/httpd.conf
+    become: yes
+    become_method: sudo
+    notify:
+    - restart apache
+  - name: ensure apache is running
+    service:
+      name: httpd
+      state: started
+    become: yes
+    become_method: sudo
+  handlers:
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+      become: yes
+      become_method: sudo
+
